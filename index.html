@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 效率工坊 — 翻译 / 文案 / 代码审查</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f8fafc; --card: #fff; --text: #1e293b; --text2: #64748b;
+    --accent: #2563eb; --accent2: #1d4ed8; --border: #e2e8f0;
+    --green: #059669; --purple: #7c3aed; --orange: #ea580c;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+  a { color: var(--accent); text-decoration: none; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* Nav */
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  nav .container { display: flex; justify-content: space-between; align-items: center; height: 60px; }
+  nav .logo { font-weight: 700; font-size: 18px; color: var(--accent); }
+  nav .nav-links { display: flex; gap: 28px; list-style: none; }
+  nav .nav-links a { color: var(--text2); font-size: 14px; transition: color .2s; }
+  nav .nav-links a:hover { color: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 80px 0 60px; text-align: center; }
+  .hero h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 16px; }
+  .hero h1 span { color: var(--accent); }
+  .hero p { font-size: 18px; color: var(--text2); max-width: 600px; margin: 0 auto 32px; }
+  .hero .cta { display: inline-block; background: var(--accent); color: #fff; padding: 14px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; transition: background .2s; }
+  .hero .cta:hover { background: var(--accent2); }
+  .hero .stats { display: flex; justify-content: center; gap: 48px; margin-top: 48px; }
+  .hero .stat b { display: block; font-size: 28px; color: var(--accent); }
+  .hero .stat span { font-size: 14px; color: var(--text2); }
+
+  /* Section */
+  section { padding: 72px 0; }
+  .section-title { text-align: center; margin-bottom: 48px; }
+  .section-title h2 { font-size: 30px; font-weight: 700; margin-bottom: 8px; }
+  .section-title p { color: var(--text2); font-size: 16px; }
+
+  /* Services */
+  .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .service-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 32px 28px; transition: transform .2s, box-shadow .2s; }
+  .service-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.08); }
+  .service-card .icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px; }
+  .service-card .icon.blue { background: #eff6ff; }
+  .service-card .icon.green { background: #ecfdf5; }
+  .service-card .icon.purple { background: #f5f3ff; }
+  .service-card h3 { font-size: 20px; margin-bottom: 8px; }
+  .service-card p { color: var(--text2); font-size: 14px; margin-bottom: 16px; }
+  .service-card .tag { display: inline-block; background: #f1f5f9; color: var(--text2); font-size: 12px; padding: 3px 10px; border-radius: 99px; margin-right: 6px; }
+
+  /* Pricing */
+  .pricing { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .price-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 32px 28px; text-align: center; transition: border-color .2s; }
+  .price-card:hover { border-color: var(--accent); }
+  .price-card.featured { border-color: var(--accent); background: #f8faff; }
+  .price-card h3 { font-size: 20px; margin-bottom: 4px; }
+  .price-card .price { font-size: 36px; font-weight: 800; color: var(--accent); margin: 12px 0; }
+  .price-card .price small { font-size: 16px; font-weight: 400; color: var(--text2); }
+  .price-card ul { list-style: none; text-align: left; margin: 20px 0 24px; }
+  .price-card ul li { padding: 6px 0; font-size: 14px; color: var(--text2); }
+  .price-card ul li::before { content: "✓ "; color: var(--green); font-weight: 700; }
+  .btn { display: inline-block; padding: 10px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all .2s; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-outline { background: #fff; color: var(--accent); border: 2px solid var(--accent); }
+  .btn-outline:hover { background: var(--accent); color: #fff; }
+
+  /* Samples */
+  .samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .sample-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .sample-card .preview { background: #f1f5f9; padding: 20px 24px; font-size: 13px; color: var(--text2); border-bottom: 1px solid var(--border); max-height: 140px; overflow: hidden; position: relative; }
+  .sample-card .preview::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 40px; background: linear-gradient(transparent, #f1f5f9); }
+  .sample-card .info { padding: 16px 24px; }
+  .sample-card .info h4 { font-size: 16px; margin-bottom: 4px; }
+  .sample-card .info span { font-size: 13px; color: var(--text2); }
+
+  /* Workflow */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; text-align: center; }
+  .step .num { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; margin-bottom: 12px; }
+  .step h4 { font-size: 16px; margin-bottom: 4px; }
+  .step p { font-size: 14px; color: var(--text2); }
+
+  /* Contact */
+  .contact-box { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; max-width: 520px; margin: 0 auto; text-align: center; }
+  .contact-box .qrcode { width: 120px; height: 120px; background: #f1f5f9; margin: 20px auto; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  .contact-box .contact-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+  .contact-box .contact-item:last-child { border-bottom: none; }
+  .contact-box .contact-item .label { color: var(--text2); min-width: 50px; text-align: right; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; color: var(--text2); font-size: 13px; }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 28px; }
+    .hero .stats { flex-direction: column; gap: 20px; }
+    nav .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="logo">AI 效率工坊</div>
+    <ul class="nav-links">
+      <li><a href="#services">服务</a></li>
+      <li><a href="#pricing">价格</a></li>
+      <li><a href="#samples">案例</a></li>
+      <li><a href="#contact">联系</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>用 <span>AI</span> 提效，专业翻译 & 文案服务</h1>
+    <p>本地大模型 24 小时驱动，快速交付，质量对标专业工作室，价格只要一半</p>
+    <a href="#contact" class="cta">立即下单</a>
+    <div class="stats">
+      <div class="stat"><b>24h</b><span>全天候交付</span></div>
+      <div class="stat"><b>1000+</b><span>已处理稿件</span></div>
+      <div class="stat"><b>98%</b><span>客户好评</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="services">
+  <div class="container">
+    <div class="section-title">
+      <h2>我能帮你做什么</h2>
+      <p>AI 驱动 + 人工精校，质量有保障</p>
+    </div>
+    <div class="services">
+      <div class="service-card">
+        <div class="icon blue">&#x1F310;</div>
+        <h3>中英翻译</h3>
+        <p>技术文档、学术论文、商务邮件、网站本地化。质量对标 DeepL Pro，地道流畅。</p>
+        <div>
+          <span class="tag">技术文档</span>
+          <span class="tag">学术论文</span>
+          <span class="tag">商务邮件</span>
+          <span class="tag">网站本地化</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="icon green">&#x270D;&#xFE0F;</div>
+        <h3>文案生成</h3>
+        <p>小红书种草文、SEO 技术文章、公众号推文、产品描述。了解平台调性，自带流量密码。</p>
+        <div>
+          <span class="tag">小红书</span>
+          <span class="tag">SEO文章</span>
+          <span class="tag">公众号</span>
+          <span class="tag">产品文案</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="icon purple">&#x1F50D;</div>
+        <h3>代码审查</h3>
+        <p>Python / JS / Go / Java 代码质量审查，安全漏洞扫描，性能优化建议，附带修复方案。</p>
+        <div>
+          <span class="tag">质量审查</span>
+          <span class="tag">安全扫描</span>
+          <span class="tag">性能优化</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing" style="background:#fff;">
+  <div class="container">
+    <div class="section-title">
+      <h2>透明定价</h2>
+      <p>无隐形收费，量大更优惠</p>
+    </div>
+    <div class="pricing">
+      <div class="price-card">
+        <h3>中译英</h3>
+        <div class="price">50<small> 元/千字</small></div>
+        <ul>
+          <li>技术/学术/商务全覆盖</li>
+          <li>保持原文格式排版</li>
+          <li>支持 .docx / .pdf / .txt</li>
+          <li>24 小时内交付</li>
+          <li>不满意免费修改</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">下单</a>
+      </div>
+      <div class="price-card featured">
+        <h3>文案生成</h3>
+        <div class="price">30<small> 元/篇</small></div>
+        <ul>
+          <li>小红书 / SEO / 公众号</li>
+          <li>600-800字质量保证</li>
+          <li>提供 3 个标题备选</li>
+          <li>包含 SEO 关键词</li>
+          <li>买 10 送 2</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">下单</a>
+      </div>
+      <div class="price-card">
+        <h3>代码审查</h3>
+        <div class="price">200<small> 元/次</small></div>
+        <ul>
+          <li>质量 / 安全 / 性能</li>
+          <li>逐行问题标注</li>
+          <li>附带修复代码示例</li>
+          <li>支持 10+ 编程语言</li>
+          <li>紧急加急 +50元</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">下单</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="samples">
+  <div class="container">
+    <div class="section-title">
+      <h2>案例展示</h2>
+      <p>真实输出质量，所见即所得</p>
+    </div>
+    <div class="samples">
+      <div class="sample-card">
+        <div class="preview">
+          <strong>中→英翻译示例：</strong><br><br>
+          <em>"Artificial intelligence is transforming our way of life, from smartphones to autonomous vehicles; AI technology has permeated every aspect of daily living. It is predicted that by 2030, the global AI market will exceed $15 trillion in size..."</em>
+        </div>
+        <div class="info">
+          <h4>技术文章翻译</h4>
+          <span>中译英 · 2段 · 36秒完成</span>
+        </div>
+      </div>
+      <div class="sample-card">
+        <div class="preview">
+          <strong>小红书文案示例：</strong><br><br>
+          &#x1F525;【你的兼职瓶颈？】是不是觉得兼职收入一直停滞不前？其实利用AI工具，你可以轻松突破困境！<br><br>
+          &#x1F3AF;找准赛道：AI相关技能需求暴涨3倍（领英数据），从数据分析到内容创作...<br><br>
+          &#x1F6E0;工具是关键：Grammarly提质量，HuggingFace降门槛...
+        </div>
+        <div class="info">
+          <h4>AI副业实操指南</h4>
+          <span>小红书风格 · 700字 · 标签齐全</span>
+        </div>
+      </div>
+      <div class="sample-card">
+        <div class="preview">
+          <strong>代码审查示例：</strong><br><br>
+          <span style="color:#dc2626;">[高] L42: SQL注入风险 — 用户输入直接拼接到查询字符串</span><br>
+          <span style="color:#ea580c;">[中] L78: 循环内重复创建数据库连接</span><br>
+          <span style="color:#059669;">[修复] 使用参数化查询 + 连接池</span>
+        </div>
+        <div class="info">
+          <h4>Python Web 应用审查</h4>
+          <span>发现 3 个高危 + 5 个中危问题</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#fff;">
+  <div class="container">
+    <div class="section-title">
+      <h2>下单流程</h2>
+      <p>三步搞定，简单高效</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>联系我</h4>
+        <p>微信或邮件发送需求，描述你的要求</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>确认报价</h4>
+        <p>我评估后报价，你确认后开始处理</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>验收付款</h4>
+        <p>24h内交付，满意后付款，不满意免费改</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="section-title">
+      <h2>联系我</h2>
+      <p>扫码加微信或发邮件，即刻开始</p>
+    </div>
+    <div class="contact-box">
+      <div class="qrcode"><img src="qrcode.png" width="120" height="120" alt="微信二维码" style="border-radius:8px;"></div>
+      <p style="color:var(--text2);font-size:14px;">微信扫码添加（请备注"AI服务"）</p>
+      <div style="margin-top:24px;">
+        <div class="contact-item">
+          <span class="label">微信</span>
+          <span>扫码添加（备注"AI服务"秒通过）</span>
+        </div>
+        <div class="contact-item">
+          <span class="label">邮箱</span>
+          <span>9425581@qq.com</span>
+        </div>
+        <div class="contact-item">
+          <span class="label">响应</span>
+          <span>工作日 2 小时内回复</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2026 AI 效率工坊 — 以 AI 提效，让专业服务更平价</p>
+  </div>
+</footer>
+
+</body>
+</html>
